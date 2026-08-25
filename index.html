@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kokoro Whispers</title>
+    <!-- Library untuk efek Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
+
+        /* Container HP */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 800px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        /* Sembunyikan layar yang tidak aktif */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- SCREEN 1: ENVELOPE --- */
+        .envelope-wrapper {
+            font-size: 100px;
+            cursor: pointer;
+            animation: float 2s infinite ease-in-out;
+            transition: transform 0.3s;
+        }
+        .envelope-wrapper:hover {
+            transform: scale(1.1);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .title-text { font-size: 24px; font-weight: 900; color: #4a4e69; margin-top: 20px;}
+
+        /* --- SCREEN 2: CONFESSION --- */
+        .chibi-container {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .question { font-size: 22px; font-weight: 800; color: #22223b; margin-bottom: 30px; }
+        
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-yes { background: #ff9a9e; color: white; }
+        .btn-yes:active { transform: scale(0.9); }
+        .btn-no { background: #a8dadc; color: #1d3557; }
+        
+        /* Efek getar untuk button NO */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        .shake-effect { animation: shake 0.3s ease; }
+
+        /* --- SCREEN 3: DATE PLANNER --- */
+        .planner-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f1f2f6;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #2f3542;
+        }
+        .option-btn.selected {
+            background: #ffeaa7;
+            border-color: #fdcb6e;
+        }
+
+        /* --- SCREEN 4: MATSURI TICKET --- */
+        .ticket {
+            background: linear-gradient(to bottom, #192841, #6a4c7c, #ff9a9e);
+            width: 100%;
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+        .ticket-title { text-align: center; font-size: 24px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;}
+        .ticket-info p { margin-bottom: 10px; font-size: 16px;}
+        .tear-line {
+            border-top: 2px dashed rgba(255,255,255,0.6);
+            margin-top: 20px;
+            padding-top: 15px;
+            text-align: center;
+        }
+        .btn-wa {
+            background: #25D366;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- SCREEN 1: BUKA AMPLOP -->
+    <div id="screen1" class="screen active">
+        <!-- Nanti 💌 ini bisa diganti pakai tag <img> gambar amplop anime -->
+        <div class="envelope-wrapper" onclick="openEnvelope()">💌</div>
+        <p class="title-text">You got a special quest!</p>
+        <p style="color: #666; font-size: 14px; margin-top: 10px;">(Tap to open)</p>
+    </div>
+
+    <!-- SCREEN 2: TEMBAKAN -->
+    <div id="screen2" class="screen">
+        <!-- Nanti icon ini diganti pakai gambar Chibi Tani & Suzuki -->
+        <div id="chibi" class="chibi-container">👦🏻💕👧🏻</div>
+        <h2 id="confess-text" class="question">Misi Rank-S: <br>Mau gak jadi pacarku?</h2>
+        
+        <div class="btn-group">
+            <button class="btn btn-yes" onclick="clickYes()">Mau! 💖</button>
+            <button class="btn btn-no" id="btn-no" onclick="clickNo()">Enggak 🙅🏻‍♀️</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: DATE PLANNER -->
+    <div id="screen3" class="screen">
+        <h2 class="question" style="font-size: 20px;">Yeay! Sekarang kita susun date-nya 🌸</h2>
+        
+        <div class="planner-card">
+            <p><strong>1. Pulang sekolah mampir jajan apa?</strong></p>
+            <button class="option-btn" onclick="selectOption('jajan', 'Es Krim / Boba 🍦', this)">Es Krim / Boba 🍦</button>
+            <button class="option-btn" onclick="selectOption('jajan', 'Seblak / Telor Gulung 🍢', this)">Seblak / Telor Gulung 🍢</button>
+        </div>
+
+        <div class="planner-card">
+            <p><strong>2. Kalo weekend enaknya ngapain?</strong></p>
+            <button class="option-btn" onclick="selectOption('kegiatan', 'Photobox bareng! 📸', this)">Photobox bareng! 📸</button>
+            <button class="option-btn" onclick="selectOption('kegiatan', 'Main ke Timezone 🎮', this)">Main ke Timezone 🎮</button>
+        </div>
+
+        <button class="btn btn-yes" style="width: 100%;" onclick="generateTicket()">Buat Tiket Kencan! ✨</button>
+    </div>
+
+    <!-- SCREEN 4: MATSURI TICKET -->
+    <div id="screen4" class="screen">
+        <div class="ticket">
+            <div class="ticket-title">🌸 MATSURI DATE TICKET 🌸</div>
+            <div class="ticket-info">
+                <p><strong>To:</strong> syifa</p>
+                <p><strong>From:</strong> Faul</p>
+                <p><strong>Status:</strong> QUEST CLEARED! 💖</p>
+                <br>
+                <p><strong>🍡 Jajan:</strong> <span id="res-jajan">-</span></p>
+                <p><strong>✨ Aktivitas:</strong> <span id="res-kegiatan">-</span></p>
+            </div>
+            <div class="tear-line">
+                <p style="letter-spacing: 5px;">|||| ||||| | || ||||| |||</p>
+                <p style="font-size: 10px; opacity: 0.7;">Tear to redeem</p>
+            </div>
+        </div>
+
+        <button class="btn btn-wa" onclick="sendWA()">Kirim Tiket ke WhatsApp 📲</button>
+    </div>
+
+</div>
+
+<script>
+    // Variables untuk nyimpen pilihan date
+    let chosenJajan = "Belum milih";
+    let chosenKegiatan = "Belum milih";
+
+    // Fungsi ganti layar
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // Layar 1 ke 2
+    function openEnvelope() {
+        showScreen('screen2');
+    }
+
+    // Fungsi kalau tombol 'Enggak' dipencet
+    function clickNo() {
+        const btnNo = document.getElementById('btn-no');
+        const chibi = document.getElementById('chibi');
+        const text = document.getElementById('confess-text');
+
+        // Bikin HP getar (Support di Android)
+        if(navigator.vibrate) {
+            navigator.vibrate([100, 50, 100]); // Getar deg-degan
+        }
+
+        // Animasi Shake di tombol
+        btnNo.classList.add('shake-effect');
+        setTimeout(() => btnNo.classList.remove('shake-effect'), 300);
+
+        // Ubah Vibe jadi sedih
+        document.body.style.background = "#57606f"; // background jadi gelap
+        chibi.innerHTML = "😭💔🌧️"; // Ganti icon jadi nangis
+        text.innerHTML = "Yakin nolak...?<br>Aku sedih lho...";
+        text.style.color = "white";
+    }
+
+    // Fungsi kalau tombol 'Mau' dipencet
+    function clickYes() {
+        // Balikin background kalau sempat dipencet 'Enggak'
+        document.body.style.background = "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)";
+        
+        // Efek Confetti Ledakan Kebahagiaan
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ff9a9e', '#fecfef', '#a8dadc']
+        });
+
+        // Pindah ke Layar Planner setelah delay 1.5 detik
+        setTimeout(() => {
+            showScreen('screen3');
+        }, 1500);
+    }
+
+    // Fungsi untuk milih tombol date plan
+    function selectOption(category, value, buttonEl) {
+        // Hapus class selected dari tombol lain di parent yang sama
+        let parent = buttonEl.parentElement;
+        parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+        
+        // Tambah class selected ke tombol yang diklik
+        buttonEl.classList.add('selected');
+
+        if(category === 'jajan') chosenJajan = value;
+        if(category === 'kegiatan') chosenKegiatan = value;
+    }
+
+    // Bikin tiket dan pindah layar 4
+    function generateTicket() {
+        document.getElementById('res-jajan').innerText = chosenJajan;
+        document.getElementById('res-kegiatan').innerText = chosenKegiatan;
+        showScreen('screen4');
+    }
+
+    // Fitur kirim ke WhatsApp
+    function sendWA() {
+        // Ganti nomor lo disini. Format: 628xxxxxxxxx (Tanpa 0 atau +)
+        const noWa = "6281939940943"; 
+        
+        let pesan = `Yeay! Aku terima misi Rank-S nya! 💖\n\n🎟️ *Ini Tiket Kencan Kita* 🎟️\n🍡 Jajan: ${chosenJajan}\n✨ Aktivitas: ${chosenKegiatan}\n\nCan't wait! 😍`;
+        
+        let url = `https://api.whatsapp.com/send?phone=${noWa}&text=${encodeURIComponent(pesan)}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
+
