@@ -9,10 +9,14 @@
     <!-- Script Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            background-color: #0d0c11;
+            background-color: #0d0c11; /* Background gelap estetik */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,6 +26,7 @@
             overflow: hidden;
         }
 
+        /* Container mirip HP di video */
         .phone {
             width: 100%;
             max-width: 380px;
@@ -37,6 +42,7 @@
             overflow: hidden;
         }
 
+        /* Styling Tiap Halaman (Step) */
         .step {
             display: none;
             flex-direction: column;
@@ -45,13 +51,16 @@
             height: 100%;
             animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .step.active { display: flex; }
+        .step.active {
+            display: flex;
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Animasi GIF */
         .gif-container {
             width: 100%;
             height: 220px;
@@ -60,8 +69,12 @@
             align-items: flex-end;
             margin-bottom: 20px;
         }
-        .gif-container img { height: 180px; object-fit: contain; }
+        .gif-container img {
+            height: 180px;
+            object-fit: contain;
+        }
 
+        /* Typography */
         h1 {
             font-family: 'Playfair Display', serif;
             font-size: 32px;
@@ -78,6 +91,7 @@
             font-style: italic;
         }
 
+        /* Buttons Utama */
         .btn-container {
             width: 100%;
             display: flex;
@@ -109,39 +123,35 @@
             background-color: transparent;
             color: #9c94a6;
             border: 1px solid #3d3445;
-            position: relative;
+            position: relative; /* Penting buat efek lari */
         }
 
-        /* Karena teks jawabannya panjang-panjang, gw bikin jadi grid 1 kolom biar rapi */
+        /* Grid Pilihan Kencan (Mirip Video) */
         .grid-options {
             display: grid;
-            grid-template-columns: 1fr; 
-            gap: 12px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             width: 100%;
             margin-bottom: 30px;
-            overflow-y: auto; /* Biar bisa di-scroll kalo layarnya kecil */
         }
-        
         .option-card {
             background-color: rgba(255, 255, 255, 0.03);
             border: 2px solid #3d3445;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: left; /* Teks rata kiri biar enak dibaca */
+            border-radius: 20px;
+            padding: 20px 10px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         .option-card:hover { background-color: rgba(255, 255, 255, 0.08); }
         .option-card.selected {
             border-color: #ff4d6d;
             background-color: rgba(255, 77, 109, 0.1);
         }
-        .option-icon { font-size: 24px; }
-        .option-text { font-size: 14px; font-weight: 500; color: #e0d9e5; line-height: 1.4;}
+        .option-icon { font-size: 30px; margin-bottom: 10px; display: block; }
+        .option-text { font-size: 13px; font-weight: 500; color: #e0d9e5; }
 
+        /* Hasil Akhir (Tiket) */
         .ticket-result {
             background: rgba(255, 77, 109, 0.1);
             border: 1px solid #ff4d6d;
@@ -158,85 +168,95 @@
             padding-bottom: 10px;
         }
         .ticket-label { color: #ff4d6d; font-size: 12px; font-weight: 600; text-transform: uppercase;}
-        .ticket-value { font-size: 14px; font-weight: 500; text-align: right; max-width: 60%; line-height: 1.3;}
+        .ticket-value { font-size: 15px; font-weight: 500; text-align: right;}
     </style>
 </head>
 <body>
 
 <div class="phone">
 
-    <!-- STEP 1: CONFESSION -->
+    <!-- STEP 1: PERTANYAAN UTAMA -->
     <div id="step1" class="step active">
-        <!-- Placeholder GIF: Nanti ganti pake GIF Anime / Seihantai -->
+        <!-- Animasi Beruang (Bisa diganti link GIF anime nanti) -->
         <div class="gif-container">
             <img src="https://media.tenor.com/83uXU8sP-cQAAAAi/milk-and-mocha.gif" alt="Cute Bear">
         </div>
         
-        <h1>Syifa,<br>Misi Rank-S: Mau gak jadi pacarku?</h1>
+        <h1>Syifa, Will you go out with me?</h1>
         <p class="subtitle">There is only one right answer.</p>
 
         <div class="btn-container" id="btn-container-1">
-            <button class="btn btn-yes" onclick="nextStep(2)">Mau! 💖</button>
-            <button class="btn btn-no" id="btn-no" onmouseover="moveButton()" onclick="moveButton()">Enggak 🙅🏻‍♀️</button>
+            <button class="btn btn-yes" onclick="nextStep(2)">Yes!</button>
+            <button class="btn btn-no" id="btn-no" onmouseover="moveButton()" onclick="moveButton()">Are you sure?</button>
         </div>
     </div>
 
-    <!-- STEP 2: PULANG SEKOLAH -->
+    <!-- STEP 2: PILIH JAJAN -->
     <div id="step2" class="step">
-        <div class="gif-container" style="height: 120px;">
+        <div class="gif-container" style="height: 150px;">
             <img src="https://media.tenor.com/T0b11HjW2L8AAAAi/milk-and-mocha.gif" alt="Happy Bear">
         </div>
-        <h1 style="font-size: 22px;">Yeay! Pulang sekolah enaknya mampir ke mana nih?</h1>
-        
+        <h1 style="font-size: 24px;">Yay! Pulang sekolah jajan apa?</h1>
+        <p class="subtitle">Pilih salah satu yaa</p>
+
         <div class="grid-options">
-            <div class="option-card" onclick="selectOption('pulang', 'Beli es krim / nyari boba! 🍦', this)">
+            <div class="option-card" onclick="selectOption('jajan', 'Es Krim 🍦', this)">
                 <span class="option-icon">🍦</span>
-                <span class="option-text">Beli es krim / mampir cafe nyari boba! (Vibe Suzuki)</span>
+                <span class="option-text">Es Krim</span>
             </div>
-            <div class="option-card" onclick="selectOption('pulang', 'Jajan seblak / telor gulung 🍢', this)">
+            <div class="option-card" onclick="selectOption('jajan', 'Boba Drink 🧋', this)">
+                <span class="option-icon">🧋</span>
+                <span class="option-text">Boba Drink</span>
+            </div>
+            <div class="option-card" onclick="selectOption('jajan', 'Seblak 🍜', this)">
+                <span class="option-icon">🍜</span>
+                <span class="option-text">Seblak</span>
+            </div>
+            <div class="option-card" onclick="selectOption('jajan', 'Telor Gulung 🍢', this)">
                 <span class="option-icon">🍢</span>
-                <span class="option-text">Jajan seblak / telor gulung depan sekolah aja (Vibe Tani)</span>
-            </div>
-            <div class="option-card" onclick="selectOption('pulang', 'Langsung pulang sambil call-an 📱', this)">
-                <span class="option-icon">📱</span>
-                <span class="option-text">Langsung pulang, capek tapi sambil call-an ya (Netral)</span>
+                <span class="option-text">Telor Gulung</span>
             </div>
         </div>
         
-        <button class="btn btn-yes" onclick="nextStep(3)" style="margin-top: auto; margin-bottom: 20px;">Next ➔</button>
+        <button class="btn btn-yes" onclick="nextStep(3)">And then? ➔</button>
     </div>
 
-    <!-- STEP 3: WEEKEND PLAN -->
+    <!-- STEP 3: PILIH AKTIVITAS -->
     <div id="step3" class="step">
-        <div class="gif-container" style="height: 120px;">
+        <div class="gif-container" style="height: 150px;">
             <img src="https://media.tenor.com/2qEHeZ3aH4QAAAAi/milk-and-mocha-bear.gif" alt="Thinking Bear">
         </div>
-        <h1 style="font-size: 22px;">Kalau weekend jalan, kita ngapain?</h1>
+        <h1 style="font-size: 24px;">Kalo weekend ngapain nih?</h1>
+        <p class="subtitle">Biar makin seru!</p>
 
         <div class="grid-options">
-            <div class="option-card" onclick="selectOption('weekend', 'Photobox! Abadikan momen 📸', this)">
+            <div class="option-card" onclick="selectOption('kegiatan', 'Photobox 📸', this)">
                 <span class="option-icon">📸</span>
-                <span class="option-text">Photobox! Wajib banget abadikan momen</span>
+                <span class="option-text">Photobox</span>
             </div>
-            <div class="option-card" onclick="selectOption('weekend', 'Ke Timezone tanding game 🎮', this)">
+            <div class="option-card" onclick="selectOption('kegiatan', 'Main Timezone 🎮', this)">
                 <span class="option-icon">🎮</span>
-                <span class="option-text">Ke Timezone / Arcade, tanding main basket atau racing</span>
+                <span class="option-text">Timezone</span>
             </div>
-            <div class="option-card" onclick="selectOption('weekend', 'Marathon nonton anime 🍿', this)">
+            <div class="option-card" onclick="selectOption('kegiatan', 'Nonton Anime 🍿', this)">
                 <span class="option-icon">🍿</span>
-                <span class="option-text">Marathon nonton anime berdua sambil ngemil</span>
+                <span class="option-text">Nonton</span>
+            </div>
+            <div class="option-card" onclick="selectOption('kegiatan', 'Keliling Motoran 🛵', this)">
+                <span class="option-icon">🛵</span>
+                <span class="option-text">Jalan Santai</span>
             </div>
         </div>
 
-        <button class="btn btn-yes" onclick="showResult()" style="margin-top: auto; margin-bottom: 20px;">Lihat Tiket Matsuri ➔</button>
+        <button class="btn btn-yes" onclick="showResult()">Lihat Jadwal ➔</button>
     </div>
 
-    <!-- STEP 4: HASIL TIKET MATSURI -->
+    <!-- STEP 4: HASIL (TIKET) -->
     <div id="step4" class="step">
-        <div class="gif-container" style="height: 100px;">
+        <div class="gif-container" style="height: 120px;">
             <img src="https://media.tenor.com/bQ9_i808FSAAAAAi/milk-and-mocha-hug.gif" alt="Hug Bear">
         </div>
-        <h1 style="font-size: 26px;">🌸 Matsuri Date Ticket 🌸</h1>
+        <h1 style="font-size: 28px;">It's a date! 💕</h1>
         
         <div class="ticket-result">
             <div class="ticket-row">
@@ -248,28 +268,29 @@
                 <span class="ticket-value">Paul</span>
             </div>
             <div class="ticket-row">
-                <span class="ticket-label">Pulang Sekolah</span>
-                <span class="ticket-value" id="res-pulang">-</span>
+                <span class="ticket-label">Jajan</span>
+                <span class="ticket-value" id="res-jajan">-</span>
             </div>
             <div class="ticket-row" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
-                <span class="ticket-label">Weekend</span>
-                <span class="ticket-value" id="res-weekend">-</span>
+                <span class="ticket-label">Aktivitas</span>
+                <span class="ticket-value" id="res-kegiatan">-</span>
             </div>
         </div>
 
-        <!-- Jangan lupa ganti nomornya ya! -->
         <button class="btn btn-yes" onclick="sendWA()" style="background: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);">
-            Kirim Tiket ke WhatsApp 📲
+            Send to my WhatsApp 📲
         </button>
     </div>
 
 </div>
 
 <script>
-    let chosenPulang = "Belum milih";
-    let chosenWeekend = "Belum milih";
+    let chosenJajan = "Belum milih";
+    let chosenKegiatan = "Belum milih";
 
+    // Pindah Halaman
     function nextStep(stepNumber) {
+        // Tembak confetti pas klik YES di step 1
         if(stepNumber === 2) {
             confetti({
                 particleCount: 150,
@@ -278,44 +299,55 @@
                 colors: ['#ff4d6d', '#ff758f', '#ff99ac']
             });
         }
+
+        // Ganti aktif class
         document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
         document.getElementById('step' + stepNumber).classList.add('active');
     }
 
+    // Fungsi Tombol Lari (Dodge)
     function moveButton() {
         const btnNo = document.getElementById('btn-no');
+        
+        // Ubah posisi tombol jadi absolute biar bisa dipindah bebas
         btnNo.style.position = 'absolute';
         
+        // Dapatkan batas aman (dalam container HP dikurangi tinggi/lebar tombol)
         const container = document.getElementById('btn-container-1');
         const maxX = container.clientWidth - btnNo.clientWidth;
-        const maxY = container.clientHeight + 100; 
+        const maxY = container.clientHeight + 100; // Ruang gerak Y
 
+        // Hitung posisi random
         const randomX = Math.floor(Math.random() * maxX);
         const randomY = Math.floor(Math.random() * maxY) - 50;
 
+        // Terapkan posisi baru
         btnNo.style.left = randomX + 'px';
         btnNo.style.top = randomY + 'px';
     }
 
+    // Pilih Opsi di Grid
     function selectOption(category, value, cardElement) {
         let parent = cardElement.parentElement;
         parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
         cardElement.classList.add('selected');
 
-        if(category === 'pulang') chosenPulang = value;
-        if(category === 'weekend') chosenWeekend = value;
+        if(category === 'jajan') chosenJajan = value;
+        if(category === 'kegiatan') chosenKegiatan = value;
     }
 
+    // Tampilkan Hasil Tiket
     function showResult() {
-        document.getElementById('res-pulang').innerText = chosenPulang;
-        document.getElementById('res-weekend').innerText = chosenWeekend;
+        document.getElementById('res-jajan').innerText = chosenJajan;
+        document.getElementById('res-kegiatan').innerText = chosenKegiatan;
         nextStep(4);
     }
 
+    // Kirim WA
     function sendWA() {
         // GANTI NOMOR LO DI SINI PAKE 62...
         const noWa = "6281234567890"; 
-        const pesan = `Hi Paul! Aku terima misi Rank-S nya! 💖\n\n🎟️ *Matsuri Date Ticket Kita* 🎟️\n🏫 Pulang Sekolah: ${chosenPulang}\n🌟 Weekend: ${chosenWeekend}\n\nSee you! 🥰`;
+        const pesan = `Hi Paul! Aku mau jadi pacar kamu! 💖\n\nIni pilihan date aku:\n🍡 Jajan: ${chosenJajan}\n✨ Aktivitas: ${chosenKegiatan}\n\nSee you! 🥰`;
         const url = `https://api.whatsapp.com/send?phone=${noWa}&text=${encodeURIComponent(pesan)}`;
         window.open(url, '_blank');
     }
